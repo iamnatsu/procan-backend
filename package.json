@@ -1,0 +1,20 @@
+{
+  "name": "procan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "serve": "tsc && node ./build/app/index.js",
+    "debug": "tsc && node --inspect-brk ./build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "hapi": "^17.5.5",
+    "mongodb": "^3.1.6"
+  },
+  "devDependencies": {
+    "@types/node": "^10.10.3",
+    "typescript": "^2.9.2"
+  }
+}

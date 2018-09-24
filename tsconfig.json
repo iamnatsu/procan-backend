@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"outDir": "build",
+		"inlineSourceMap": false,
+		"declaration": true,
+		"sourceMap": true,
+		"experimentalDecorators": true,
+		"target": "es6",
+		"module": "commonjs",
+		"lib": [
+			"es2015",
+			"esnext.asynciterable"
+		]
+	},
+	"include": [
+		"app/**/*.ts"
+	]
+}
