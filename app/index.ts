@@ -1,10 +1,32 @@
 'use strict';
-import { initDB } from '../middle/db';
+import { initDB } from './middle/db';
 const Hapi = require('hapi');
 
 const server = Hapi.server({
-    port: 3001,
-    host: 'localhost'
+    port: 3000
+});
+
+server.route({
+    method: 'GET',
+    path: '/',
+    handler: (request, h) => {
+
+        return 'Hello, world!';
+    }
+});
+
+
+server.route({
+    method: 'GET',
+    path: '/{name}',
+    handler: (request, h) => {
+
+        // request.log(['a', 'name'], "Request name");
+        // or
+        request.logger.info('In handler %s', request.path);
+
+        return `Hello, ${encodeURIComponent(request.params.name)}!`;
+    }
 });
 
 const init = async () => {

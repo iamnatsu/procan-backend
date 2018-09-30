@@ -1,0 +1,18 @@
+ap:
+  build: '../docker'
+#  image: procan-backend:develop
+  container_name: procan-backend
+  links:
+    - mongo:mongo
+  ports:
+    - '3000:3000'
+  volumes:
+    - '../build:/app'
+
+mongo:
+  image: mongo:3.6.8-stretch
+  volumes:
+    - '~/procan/mongo-data:/data/db'
+  ports:
+    - '27017:27017'
+  command: mongod --smallfiles
