@@ -7,7 +7,7 @@
     "build": "tsc",
     "serve": "tsc && node ./build/index.js",
     "debug": "tsc && node --inspect-brk ./build/index.js",
-    "docker:run": "docker-compose -f ./docker-compose/docker-compose.yml up",
+    "docker:run": "tsc && cp -r ./node_modules ./build/ && docker-compose -f ./docker-compose/docker-compose.yml up",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "mongodb": "^3.1.6"
   },
   "devDependencies": {
+    "@types/hapi": "^17.6.1",
     "@types/mongodb": "^3.1.9",
     "@types/node": "^10.10.3",
     "typescript": "^2.9.2"

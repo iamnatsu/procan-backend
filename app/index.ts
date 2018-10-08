@@ -1,37 +1,21 @@
 'use strict';
 import { initDB } from './middle/db';
-const Hapi = require('hapi');
+import { app } from './middle/hapi';
+const _services_ = require('./service'); // FIXME read service & adapt decorator
 
-const server = Hapi.server({
-    port: 3000
-});
-
-server.route({
+/*
+app.route({
     method: 'GET',
     path: '/',
     handler: (request, h) => {
-
         return 'Hello, world!';
     }
 });
-
-
-server.route({
-    method: 'GET',
-    path: '/{name}',
-    handler: (request, h) => {
-
-        // request.log(['a', 'name'], "Request name");
-        // or
-        request.logger.info('In handler %s', request.path);
-
-        return `Hello, ${encodeURIComponent(request.params.name)}!`;
-    }
-});
+*/
 
 const init = async () => {
-    await server.start();
-    console.log(`Server running at: ${server.info.uri}`);
+    await app.start();
+    console.log(`Server running at: ${app.info.uri}`);
 };
 
 process.on('unhandledRejection', (err) => {
