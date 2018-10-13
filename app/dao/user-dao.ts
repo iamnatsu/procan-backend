@@ -1,25 +1,45 @@
 import { User } from '../model/user';
+import { DaoBase, DaoIFace } from './dao-base';
+import { dbHandler as handler } from '../middle/db';
+import * as Boom from 'boom';
 
-export class UserDao {
-  public entityName = 'User';
+export class UserDao extends DaoBase implements DaoIFace {
+  COLLECTION_NAME = 'USER';
 
-  get(id: string) {
-    return new User({
-      id: 'nwada',
-      loginId: 'nwada',
-      name: 'nwada'
+  async put(id: string, user: User) {
+    this.validateUpdate(id, user);
+    return super.put(id, user);
+  }
+
+  async post(user: User) {
+    await this.validate(user);
+    return super.post(user);
+  }
+
+  private async validate(user: User) {
+    if (!user.name) {
+      throw Boom.badRequest('必須項目エラー: 名前');
+    }
+    if (!user.loginId) {
+      throw Boom.badRequest('必須項目エラー: ログインID');
+    }
+    await this.getByLoginId(user.loginId).then(result=> {
+      if (result && result['id']) throw Boom.badRequest('重複エラー: ログインID');
     });
   }
 
-  post(user: User) {
-    return user;
+  private async validateUpdate(id: string, user: User) {
+    await this.get(id).then(result=> {
+      if (result && result['id']) throw Boom.badRequest('重複エラー: ログインID');
+    });
+    await this.validate(user);
   }
 
-  put(id: string, user: User) {
-    return user;
-  }
-  delete() {
-    
-    return ;
+  getByLoginId(loginId: String): Promise<Object> {
+    return handler.db.collection(this.COLLECTION_NAME).findOne({loginId: loginId}).then(result => {
+        return result
+      }).catch(e => {
+        return {};
+      });
   }
 }
