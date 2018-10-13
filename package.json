@@ -1,8 +1,6 @@
 {
   "name": "procan",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "serve": "tsc && node ./build/index.js",
@@ -11,13 +9,23 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@types/uuid": "^3.4.4",
+    "@types/zone.js": "^0.5.12",
+    "bcrypt": "^3.0.1",
     "hapi": "^17.5.5",
-    "mongodb": "^3.1.6"
+    "hapi-auth-bearer-token": "^6.1.0",
+    "hi-base32": "^0.5.0",
+    "mongodb": "^3.1.6",
+    "redis": "^2.8.0",
+    "uuid": "^3.3.2",
+    "zone.js": "^0.8.26"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/hapi": "^17.6.1",
     "@types/mongodb": "^3.1.9",
     "@types/node": "^10.10.3",
+    "@types/redis": "^2.8.7",
     "typescript": "^2.9.2"
   }
 }
