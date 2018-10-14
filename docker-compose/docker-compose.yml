@@ -1,6 +1,5 @@
 ap:
   build: '../docker'
-#  image: procan-backend:develop
   container_name: procan-backend
   links:
     - mongo:mongo
@@ -9,6 +8,11 @@ ap:
     - '3000:3000'
   volumes:
     - '../build:/app'
+  environment:
+    - smtphost=smtp.gmail.com
+    - smtpport=465
+    - smtpaccount= # smtp account
+    - smtppass= # smtp password
 
 mongo:
   image: mongo:3.6.8-stretch

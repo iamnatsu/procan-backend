@@ -9,13 +9,16 @@ export function routeRegist() {
     path: RegistService.path,
     handler: async (request, h) => {
       return registService.prepare(request.payload['email']).then(result => {
-          if (result) {
-              return result;
-          } else {
-              throw Boom.unauthorized();
-          }
-      }).catch(() => {
-        throw Boom.unauthorized()
+        if (result) {
+          return result;
+        } else {
+          throw Boom.badRequest('メールを送信できませんでした');
+        }
+      }).catch(e => {
+        if (Boom.isBoom(e)) {
+          throw e;
+        }
+        throw Boom.badRequest('メールを送信できませんでした');
       });
     }
   });
@@ -23,14 +26,17 @@ export function routeRegist() {
     method: 'put',
     path: RegistService.path,
     handler: async (request, h) => {
-      return registService.regist(request.payload['email'], request.payload['name'], request.payload['password'], tokenOf(request)).then(result => {
+      return registService.regist(request.payload['email'], request.payload['name'], request.payload['password'], request.payload['token']).then(result => {
           if (result) {
               return result;
           } else {
-              throw Boom.unauthorized();
+              throw Boom.badRequest('登録できませんでした。はじめからやり直してください。');
           }
-      }).catch(() => {
-        throw Boom.unauthorized()
+      }).catch(e => {
+        if (Boom.isBoom(e)) {
+          throw e;
+        }
+        throw Boom.badRequest('登録できませんでした。はじめからやり直してください。');
       });
     }
   });

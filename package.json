@@ -9,6 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@types/nodemailer": "^4.6.5",
     "@types/uuid": "^3.4.4",
     "@types/zone.js": "^0.5.12",
     "bcrypt": "^3.0.1",
@@ -16,6 +17,7 @@
     "hapi-auth-bearer-token": "^6.1.0",
     "hi-base32": "^0.5.0",
     "mongodb": "^3.1.6",
+    "nodemailer": "^4.6.8",
     "redis": "^2.8.0",
     "uuid": "^3.3.2",
     "zone.js": "^0.8.26"
