@@ -23,6 +23,10 @@ export class UserService {
     });
   }
 
+  async getByLoginIdInner(loginId: string) {
+    return this.dao.getByLoginId(loginId);
+  }
+
   @post('', true)
   async post(payload: User, token?: string) {
     return this.dao.post(await this.prepareCreate(payload, token)).then((result: User) => {
