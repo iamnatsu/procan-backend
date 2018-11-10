@@ -19,6 +19,11 @@ docker-compose/docker-compose.yml
     - smtppass= # smtp password
 ```
 
+install
+```
+npm install
+```
+
 ## docker run
 ```
 npm run docker:run

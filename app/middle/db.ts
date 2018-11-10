@@ -18,10 +18,6 @@ export function initDB(retryCnt = 1) {
     } else {
       console.log('Connected successfully to mongo');
       dbHandler.db = client.db(dbName);
-      /*
-      dbHandler.db.collection('USER').createIndex({id: 1}, {unique: true});
-      dbHandler.db.collection('USER').createIndex({loginId: 1}, {unique: true});
-      */
       initKvs();
     }
   });
@@ -46,7 +42,7 @@ export class KvsHandler {
 }
 export const kvsHandler = new KvsHandler();
 
-export function initKvs() {
+function initKvs() {
   kvsHandler.kvs = redis.createClient(6379, 'redis');
   kvsHandler.kvs.on('connect', () => {
     console.log('Connected successfully to redis');
