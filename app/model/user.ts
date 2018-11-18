@@ -7,7 +7,7 @@ export class User {
   password: string;
   audit: Audit;
 
-  constructor(args: {id?: string, loginId: string, name: string, password?: string}) {
+  constructor(args?: {id?: string, loginId: string, name: string, password?: string}) {
     if (!args) return;
 
     if (args.id) this.id = args.id;

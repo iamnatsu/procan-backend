@@ -1,3 +1,4 @@
+import { Audit } from "./common";
 import { User } from './user'
 import { Schedule } from './schedule'
 
@@ -26,8 +27,18 @@ export class Task extends Schedule {
 	 * 担当者
 	 */
 	assignees: Array<User>;
+  /**
+   * オーナー
+   */
+  owner: User;
 	/**
 	 * カンバン位置
 	 */
 	boardPos: number;
+
+  audit: Audit;
+}
+
+export class FindTaskRequest {
+	projectId: string;
 }
