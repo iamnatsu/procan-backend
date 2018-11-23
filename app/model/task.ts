@@ -16,6 +16,10 @@ export class Task extends Schedule {
 	 */
 	projectId: string;
 	/**
+	 * ステータスID
+	 */
+	statusId: string;
+	/**
 	 * 依存元タスクID
 	 */
 	predecessors: Array<{ id: string }>;

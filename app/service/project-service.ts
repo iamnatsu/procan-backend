@@ -8,6 +8,7 @@ import { User } from '../model/user';
 import { FilterQuery } from 'mongodb';
 import { Credential } from '../model/credential';
 import * as Boom from 'boom';
+import * as uuid4  from 'uuid/v4'
 
 export class ProjectService extends BaseService {
   public path = '/project';
@@ -112,6 +113,11 @@ export class ProjectService extends BaseService {
       } else if (project.groupId) {
         project.permissionLevel = PermissionLevel.GROUP;
       }
+    }
+    if (project.statuses && project.statuses.length > 0) {
+      project.statuses.forEach(s => {
+        if (!s.id) s.id = uuid4();
+      })
     }
     if (!project.owner) project.owner = this.castOperator(project.audit.create.operator);
   }

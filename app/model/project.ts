@@ -1,5 +1,6 @@
 import { Audit } from "./common";
 import { User } from './user'
+import { Status } from './status'
 import { Schedule } from './schedule'
 
 export class Project extends Schedule {
@@ -23,6 +24,10 @@ export class Project extends Schedule {
    * グループID
    */
   groupId: string;
+  /**
+   * ステータス
+   */
+  statuses: Array<Status>;
   /**
    * オーナー
    */
