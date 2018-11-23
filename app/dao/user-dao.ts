@@ -3,7 +3,7 @@ import { DaoBase, DaoIFace } from './dao-base';
 import { dbHandler as handler } from '../middle/db';
 import * as Boom from 'boom';
 
-export class UserDao extends DaoBase implements DaoIFace {
+export class UserDao extends DaoBase<User> implements DaoIFace {
   COLLECTION_NAME = 'USER';
 
   async put(id: string, user: User) {
@@ -23,16 +23,18 @@ export class UserDao extends DaoBase implements DaoIFace {
     if (!user.loginId) {
       throw Boom.badRequest('必須項目エラー: ログインID');
     }
-    await this.getByLoginId(user.loginId).then(result=> {
+    await this.getByLoginId(user.loginId).then(result => {
       if (result && result['id']) throw Boom.badRequest('重複エラー: ログインID');
     });
   }
 
   private async validateUpdate(id: string, user: User) {
-    await this.get(id).then(result=> {
-      if (result && result['id']) throw Boom.badRequest('重複エラー: ログインID');
-    });
-    await this.validate(user);
+    if (!user.name) {
+      throw Boom.badRequest('必須項目エラー: 名前');
+    }
+    if (!user.loginId) {
+      throw Boom.badRequest('必須項目エラー: ログインID');
+    }
   }
 
   getByLoginId(loginId: String): Promise<Object> {

@@ -1,10 +1,10 @@
 import { get, post, put, del } from '../middle/hapi';
 import { User } from '../model/user';
 import { UserDao } from '../dao/user-dao';
-import { Audit, Operation, Opeartor } from '../model/common';
+import { BaseService } from './base-service';
 import * as Bcrypt from 'bcrypt';
 
-export class UserService {
+export class UserService extends BaseService {
   public path = '/user';
   private dao = new UserDao();
 
@@ -49,9 +49,7 @@ export class UserService {
   }
 
   private async prepareCreate(user: User, token?: string) {
-    user.audit = new Audit();
-    user.audit.create = this.currentOperation(token);
-    user.audit.modify = user.audit.create;
+    user.audit = await this.createAudit(token);
     const salt = await Bcrypt.genSalt(10);
     user.password = await Bcrypt.hash(user.password, salt);
     return user;
@@ -59,15 +57,13 @@ export class UserService {
 
   private async prepareUpdate(user: User, token?: string) {
     if (!user.audit) {
-      user.audit = new Audit();
-      user.audit.create = this.currentOperation(token);
-      user.audit.modify = user.audit.create;
+      user.audit = await this.createAudit(token);
       if (user.password) {
         user.password = await Bcrypt.hashSync(user.password, user.audit.create.at.getUTCMonth());
       }
       return user;
     } else {
-      user.audit.modify = this.currentOperation(token);
+      user.audit = await this.updateAudit(user.audit, token);
       if (user.password) {
         user.password = await Bcrypt.hashSync(user.password, user.audit.create.at.getUTCMonth());
       }
@@ -75,19 +71,4 @@ export class UserService {
     }
   }
 
-  private currentOperation(token?: string) {
-    const operation = new Operation();
-    operation.at = new Date();
-    operation.operator = this.currentOperator(token)
-    return operation;
-  }
-
-  private currentOperator(token?: string) {
-    if (token) {
-      // トークンから操作者を構築
-      return new Opeartor('$system', '$system');
-    } else {
-      return new Opeartor('$system', '$system');
-    }
-  }
 }

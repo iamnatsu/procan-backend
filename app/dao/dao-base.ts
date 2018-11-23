@@ -1,17 +1,25 @@
 import { dbHandler as handler } from '../middle/db';
-import { ObjectId, MongoError } from 'mongodb';
+import { ObjectId, MongoError, FilterQuery } from 'mongodb';
 import * as Boom from 'boom';
 
 export interface DaoIFace {
     COLLECTION_NAME: string;
 }
 
-export class DaoBase {
+export class DaoBase<T> {
   COLLECTION_NAME: string;
   
   get(id: String): Promise<Object> {
     return handler.db.collection(this.COLLECTION_NAME).findOne({ id: id }, { projection: { _id: 0 } }).then(result => {
       return result
+    }).catch(e => {
+      throw Boom.badRequest(e.errmsg);
+    });
+  }
+  
+  find(query: FilterQuery<T>): Promise<Array<Object>> {
+    return handler.db.collection(this.COLLECTION_NAME).find(query, { projection: { _id: 0 } }).toArray().then(result => {
+      return result;
     }).catch(e => {
       throw Boom.badRequest(e.errmsg);
     });
@@ -31,8 +39,8 @@ export class DaoBase {
   }
   
   put(id: string, payload: Object): Promise<Object> {
-    return handler.db.collection(this.COLLECTION_NAME).updateOne({ id: id }, payload).then(result => {
-      return result
+    return handler.db.collection(this.COLLECTION_NAME).updateOne({ id: id }, { $set: payload }).then(result => {
+      return this.get(id);
     }).catch(e => {
       throw Boom.badRequest(e.errmsg);
     });

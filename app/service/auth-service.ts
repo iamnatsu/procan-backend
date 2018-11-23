@@ -15,7 +15,7 @@ export class AuthService {
       c.id = token;
       return c;
     }).catch(() => {
-      Boom.unauthorized()
+      Boom.unauthorized();
     });
   }
 

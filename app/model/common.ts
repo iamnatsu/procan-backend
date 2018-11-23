@@ -17,3 +17,10 @@ export class Opeartor {
         this.name = name;
     }
 }
+
+export enum CRUD {
+    CREATE = 'CREATE',
+    READ = 'READ',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE'
+}
