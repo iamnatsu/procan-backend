@@ -1,5 +1,5 @@
 import { UserService } from './user-service';
-import * as Bcrypt from 'bcrypt';
+import * as Bcrypt from 'bcryptjs';
 import { User } from '../model/user';
 import { issueToken, deleteToken, getToken } from '../middle/credential';
 import { Credential } from '../model/credential';
