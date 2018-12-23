@@ -17,8 +17,8 @@ export class DaoBase<T> {
     });
   }
   
-  find(query: FilterQuery<T>): Promise<Array<Object>> {
-    return handler.db.collection(this.COLLECTION_NAME).find(query, { projection: { _id: 0 } }).toArray().then(result => {
+  find(query: FilterQuery<T>, limit = 1000): Promise<Array<Object>> {
+    return handler.db.collection(this.COLLECTION_NAME).find(query, { projection: { _id: 0 } }).limit(1000).toArray().then(result => {
       return result;
     }).catch(e => {
       throw Boom.badRequest(e.errmsg);

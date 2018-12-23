@@ -2,7 +2,8 @@ import { get, post, put, del } from '../middle/hapi';
 import { User } from '../model/user';
 import { UserDao } from '../dao/user-dao';
 import { BaseService } from './base-service';
-import * as Bcrypt from 'bcrypt';
+import { FilterQuery } from 'mongodb';
+import * as Bcrypt from 'bcryptjs';
 
 export class UserService extends BaseService {
   public path = '/user';
@@ -13,6 +14,22 @@ export class UserService extends BaseService {
     return this.dao.get(id).then((result: User) => {
       if (result) delete result.password;
       return result;
+    });
+  }
+
+  @post('/_find')
+  async find(payload: FilterQuery<User>, token?: string) {
+    return this.dao.find(payload).then((result: User[]) => {
+      return result;
+    });
+  }
+
+  @post('/_suggest')
+  async suggest(payload: {key: keyof User, value: string}, token?: string) {
+    const q: FilterQuery<User> = {};
+    q[payload.key] = new RegExp('^' + payload.value);
+    return this.dao.find(q).then((result: User[]) => {
+      return result.map(user => {delete user.password; return user});
     });
   }
 

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bcrypt": "^3.0.1",
+    "bcryptjs": "^2.4.3",
     "hapi": "^17.5.5",
     "hapi-auth-bearer-token": "^6.1.0",
     "hi-base32": "^0.5.0",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/hapi": "^17.6.1",
     "@types/mongodb": "^3.1.9",
     "@types/node": "^10.10.3",
