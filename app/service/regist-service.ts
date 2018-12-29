@@ -21,8 +21,8 @@ export class RegistService {
       console.log("prepare: issueToken");
       return issueToken(email).then(token => {
         const mail: SendMailOptions = {};
-        mail.sender = 'Natsuho Wada <natsuho.wada@gmail.com>';
-        mail.from = 'Natsuho Wada <natsuho.wada@gmail.com>';
+        mail.sender = 'noreply <noreply.nwada@gmail.com>';
+        mail.from = 'noreply <noreply.nwada@gmail.com>';
         mail.to = email;
         mail.subject = 'welcome!';
         mail.text = 'ようこそ!\n'
