@@ -2,11 +2,11 @@ export class Schedule {
   /**
    * 予定開始日
    */
-  expectedStartDay: string;
+  expectedStartDay: Date;
   /**
    * 予定終了日
    */
-  expectedEndDay: string;
+  expectedEndDay: Date;
   /**
    * 予定工数(秒)
    */
@@ -14,11 +14,11 @@ export class Schedule {
   /**
    * 実績開始日
    */
-  actualStartDay: string;
+  actualStartDay: Date;
   /**
    * 実績終了日
    */
-  actualEndDay: string;
+  actualEndDay: Date;
   /**
    * 実績工数(秒)
    */
