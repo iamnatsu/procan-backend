@@ -9,6 +9,7 @@ const AuthBearer = require('hapi-auth-bearer-token');
 function ignoreAuth(request: Request) {
     return (request.path === '/auth' && request.method === 'post') ||
     (request.path === '/auth' && request.method === 'get') ||
+    (request.path === '/auth' && request.method === 'put') ||
     (request.path === '/auth' && request.method === 'delete') ||
     (request.path === '/regist' && request.method === 'post');
 }

@@ -3,7 +3,9 @@ import * as base32 from 'hi-base32';
 import { kvsHandler } from './db';
 import { promisify } from 'util';
 
-export async function issueToken(value?: string, ttl = 3600) {
+export const TOKEN_TTL = 86400;
+export const PREPARE_TOKEN_TTL = 3600;
+export async function issueToken(value?: string, ttl = TOKEN_TTL) {
   const setAsync = promisify(kvsHandler.kvs.setex).bind(kvsHandler.kvs)
   const token = base32.encode(uuid.v4());
   return setAsync(token, ttl, value ? value : token).then(res => {
@@ -18,7 +20,7 @@ export async function getToken(key: string) {
   });
 }
 
-export async function issuePrepareToken(email?: string, ttl = 3600) {
+export async function issuePrepareToken(email?: string, ttl = PREPARE_TOKEN_TTL) {
   const setAsync = promisify(kvsHandler.kvs.setex).bind(kvsHandler.kvs)
   const token = base32.encode(uuid.v4());
   return setAsync(email, ttl, token).then(res => {

@@ -23,6 +23,23 @@ export class AuthService {
     return this.issueToken(loginId, password);
   }
 
+  async put(token: string) {
+    return getToken(token).then(result => {
+      const _c: Credential = JSON.parse(result);
+      const now = new Date();
+      const c = new Credential();
+      c.userId = _c.userId;
+      c.lastAccessedAt = (now).toISOString();
+      c.expireAt = new Date((new Date().setDate(now.getDate() + 1))).toISOString();
+      return issueToken(JSON.stringify(c)).then(token => {
+        c.id = token;
+        return c;
+      });
+    }).catch(() => {
+      Boom.unauthorized();
+    });
+  }
+
   async delete(key: string) {
     return deleteToken(key);
   }

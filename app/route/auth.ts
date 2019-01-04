@@ -35,6 +35,21 @@ export function routeAuth() {
     }
   });
   app.route({
+    method: 'put',
+    path: AuthService.path,
+    handler: async (request, h) => {
+      return authService.put(tokenOf(request)).then(result => {
+          if (result) {
+              return result;
+          } else {
+              throw Boom.unauthorized();
+          }
+      }).catch(() => {
+        throw Boom.unauthorized()
+      });
+    }
+  });
+  app.route({
     method: 'delete',
     path: AuthService.path,
     handler: async (request, h) => {
