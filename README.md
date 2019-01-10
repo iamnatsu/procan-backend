@@ -43,3 +43,8 @@ npm run serve
 ```
 npm run debug
 ```
+---
+
+ヒント
+
+ルーティングのほとんどは app/middle/hapi.ts に作ったデコレータを利用
