@@ -13,7 +13,7 @@ export async function issueToken(value?: string, ttl = TOKEN_TTL) {
   });
 }
 
-export async function getToken(key: string) {
+export async function getToken(key: string): Promise<string> {
   const getAsync = promisify(kvsHandler.kvs.get).bind(kvsHandler.kvs)
   return getAsync(key).then(res => {
     return res;

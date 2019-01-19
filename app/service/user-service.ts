@@ -1,9 +1,12 @@
 import { get, post, put, del } from '../middle/hapi';
 import { User } from '../model/user';
+import { Credential } from '../model/credential';
 import { UserDao } from '../dao/user-dao';
 import { BaseService } from './base-service';
 import { FilterQuery } from 'mongodb';
+import { getToken } from '../middle/credential';
 import * as Bcrypt from 'bcryptjs';
+import * as Boom from 'boom';
 
 export class UserService extends BaseService {
   public path = '/user';
@@ -17,10 +20,16 @@ export class UserService extends BaseService {
     });
   }
 
+  _get(id: string) {
+    return this.dao.get(id).then((result: User) => {
+      return result;
+    });
+  }
+
   @post('/_find')
   async find(payload: FilterQuery<User>, token?: string) {
     return this.dao.find(payload).then((result: User[]) => {
-      return result;
+      return result.map(user => {delete user.password; return user});
     });
   }
 
@@ -54,6 +63,7 @@ export class UserService extends BaseService {
 
   @put('/{id}', true)
   async put(id: string, payload: User, token: string) {
+    this.validate(id, token);
     return this.dao.put(id, await this.prepareUpdate(payload, token)).then((result: User) => {
       if (result) delete result.password;
       return result;
@@ -63,6 +73,12 @@ export class UserService extends BaseService {
   @del('/{id}')
   async delete() {
     return ;
+  }
+
+  private async validate(userId: string, token: string) {
+    const t = await getToken(token);
+    const c: Credential = JSON.parse(t);
+    if (c.userId !== userId) Boom.forbidden('forbidden')
   }
 
   private async prepareCreate(user: User, token?: string) {
@@ -82,7 +98,10 @@ export class UserService extends BaseService {
     } else {
       user.audit = await this.updateAudit(user.audit, token);
       if (user.password) {
-        user.password = await Bcrypt.hashSync(user.password, user.audit.create.at.getUTCMonth());
+        user.password = await Bcrypt.hashSync(user.password, new Date(user.audit.create.at).getUTCMonth());
+      } else {
+        const u = await this._get(user.id);
+        user.password = u.password;
       }
       return user;
     }
