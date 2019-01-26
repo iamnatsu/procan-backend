@@ -1,6 +1,8 @@
 'use strict';
 import { initDB } from './middle/db';
 import { app } from './middle/hapi';
+import { getToken } from './middle/credential';
+import { Credential } from './model/credential';
 import { Request } from 'hapi';
 
 const _services_ = require('./service'); // read service & adapt decorator
@@ -17,7 +19,7 @@ function ignoreAuth(request: Request) {
 const init = async () => {
     await app.register(AuthBearer)
 
-    app.auth.strategy('simple', 'bearer-access-token', {
+    app.auth.strategy('checkIgnorePath', 'bearer-access-token', {
         validate: async (request: Request, token, h) => {
             const credentials = {};
             const artifacts = {};
@@ -32,13 +34,17 @@ const init = async () => {
         allowChaining: true
     });
 
-    app.auth.strategy('fallback', 'bearer-access-token', {
+    app.auth.strategy('checkToken', 'bearer-access-token', {
         validate: async (request, token, h) => {
-            const isValid = true; //token === '1234';
-
             const credentials = { token };
-            const artifacts = { test: 'info' };
+            const artifacts = {};
+            let isValid = false;
 
+            const t = await getToken(token);
+            const c: Credential = JSON.parse(t);
+            if (c && c.expireAt && new Date(c.expireAt) > new Date()) {
+                isValid = true;
+            }
             return { isValid, credentials, artifacts };
         },
         allowChaining: true
@@ -46,20 +52,9 @@ const init = async () => {
 
     app.auth.default({
         strategies: [
-            'simple',
-            'fallback'
+            'checkIgnorePath',
+            'checkToken'
         ]
-    });
-
-    app.auth.scheme
-
-    app.route({
-        method: 'GET',
-        path: '/',
-        handler: async function (request, h) {
-
-            return { info: 'success!' };
-        }
     });
 
     await app.start();
@@ -68,7 +63,7 @@ const init = async () => {
 
 process.on('unhandledRejection', (err) => {
     console.log(err);
-    process.exit(1);
+    // process.exit(1);
 });
 
 init();
