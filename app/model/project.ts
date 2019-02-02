@@ -29,6 +29,10 @@ export class Project extends Schedule {
    */
   statuses: Array<Status>;
   /**
+   * タスク並び順（ガントチャート）
+   */
+  ganttOrder: Array<string>;
+  /**
    * オーナー
    */
   owner: User;
