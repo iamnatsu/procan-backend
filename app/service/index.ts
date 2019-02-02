@@ -4,4 +4,5 @@ import { routing } from '../route';
 const userService = require('./user-service');
 const projectService = require('./project-service');
 const taskService = require('./task-service');
+const groupService = require('./group-service');
 routing();

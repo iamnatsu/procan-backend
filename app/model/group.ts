@@ -1,3 +1,4 @@
+import { Audit } from "./common";
 import { User } from './user'
 
 export class Group {
@@ -13,4 +14,10 @@ export class Group {
    * 担当者
    */
   assignees: Array<User>;
+  /**
+   * オーナー
+   */
+  owner: User;
+
+  audit: Audit;
 }

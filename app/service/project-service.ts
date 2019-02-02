@@ -9,11 +9,15 @@ import { FilterQuery } from 'mongodb';
 import { Credential } from '../model/credential';
 import * as Boom from 'boom';
 import * as uuid4  from 'uuid/v4'
+import { GroupService } from './group-service';
+import { TaskService } from './task-service';
 
 export class ProjectService extends BaseService {
   public path = '/project';
   private dao = new ProjectDao();
   private authService = new AuthService();
+  private groupService = new GroupService();
+  private taskService = new TaskService();
 
   @get('/{id}')
   async get(id: string, token: string) {
@@ -55,10 +59,12 @@ export class ProjectService extends BaseService {
   async find(token: string) {
     const credential: Credential | void = await this.authService.get(token);
     if (credential) {
+      const groups = await this.groupService.find(token);
       const query: FilterQuery<Project> = {};
-      query['$or'] = [ 
+      query['$or'] = [
         {'assignees': { $elemMatch: { id: credential.userId }}},
-        {'owner': { id: credential.userId }}
+        {'owner': { id: credential.userId }},
+        {'groupId': { $in: groups.map(g => g.id)}}
       ];
       return this.dao.find(query)
     } else {
@@ -87,10 +93,31 @@ export class ProjectService extends BaseService {
   async delete(id: string, token: string) {
     const isValid = this.checkPermissionById(id, token);
     if (!isValid) throw Boom.forbidden();
-
     return this.dao.delete(id).then((result: Project) => {
-      return;
+      return this.taskService.deleteProjectTask(result, token).then(() => {
+        return;
+      });
     });
+  }
+
+  async deleteByGroupId(groupId: string, token: string) {
+    const credential: Credential | void = await this.authService.get(token);
+    if (!credential) return Promise.resolve([]);
+    const groups = await this.groupService.find(token);
+    if (groups.findIndex(g => g.id === groupId) < 0) return Promise.resolve([]);
+
+    const query: FilterQuery<Project> = {};
+    query['$or'] = [
+      {'groupId': { $in: groups.map(g => g.id)}}
+    ];
+    return this.dao.find(query).then(async (res: Project[]) => {
+      if (!res) return;
+        for (let i in res) {
+          console.log("delete project: " + res[i].id)
+          await this.delete(res[i].id, token);
+        }
+        return;
+      })
   }
 
   private async prepareCreate(project: Project, token?: string) {
@@ -129,3 +156,4 @@ export class ProjectService extends BaseService {
   }
 
 }
+

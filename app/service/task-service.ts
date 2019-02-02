@@ -7,16 +7,23 @@ import { Opeartor, CRUD } from '../model/common';
 import { User } from '../model/user';
 import { FilterQuery } from 'mongodb';
 import * as Boom from 'boom';
+import { Project } from '../model/project';
 
 export class TaskService extends BaseService {
   public path = '/task';
   private dao = new TaskDao();
-  private projectService = new ProjectService();
+  private _projectService = null;
+  private projectService() {
+    if(!this._projectService) {
+      this._projectService = new ProjectService();
+    }
+    return this._projectService;
+  }
 
   @get('/{id}')
   async get(id: string, token: string) {
     return this.dao.get(id).then(async (result: Task) => {
-      const isValid = await this.projectService.checkPermissionById(result.projectId, token, CRUD.READ);
+      const isValid = await this.projectService().checkPermissionById(result.projectId, token, CRUD.READ);
       return isValid ? result : null;
     });
   }
@@ -24,7 +31,7 @@ export class TaskService extends BaseService {
   @get('/find/{projectId}')
   async find(projectId: string, token: string) {
     if (projectId) {
-      const isValid = await this.projectService.checkPermissionById(projectId, token, CRUD.READ);
+      const isValid = await this.projectService().checkPermissionById(projectId, token, CRUD.READ);
       if (!isValid) return Promise.resolve([]);
 
       const query: FilterQuery<Task> = {};
@@ -38,7 +45,7 @@ export class TaskService extends BaseService {
   @post('/find', true)
   async find2(payload: FindTaskRequest, token: string) {
     if (payload) {
-      const isValid = await this.projectService.checkPermissionById(payload.projectId, token, CRUD.READ);
+      const isValid = await this.projectService().checkPermissionById(payload.projectId, token, CRUD.READ);
       if (!isValid) return Promise.resolve([]);
 
       const query: FilterQuery<Task> = {};
@@ -67,7 +74,7 @@ export class TaskService extends BaseService {
 
   async checkPermission(payload: Task, token: string) {
     if (payload && payload.projectId) {
-      const isValid = await this.projectService.checkPermissionById(payload.projectId, token);
+      const isValid = await this.projectService().checkPermissionById(payload.projectId, token);
       if (!isValid) return Promise.resolve([]);
     } else {
       throw Boom.badRequest('必須項目エラー: プロジェクトID');
@@ -84,6 +91,12 @@ export class TaskService extends BaseService {
       } else {
         throw Boom.forbidden();
       }
+    });
+  }
+
+  async deleteProjectTask(project: Project, token: string) {
+    return this.dao.deleteMany({'projectId': project.id }).then((result: Task) => {
+      return;
     });
   }
 
