@@ -1,9 +1,11 @@
-# procan
-トレロライクのタスク管理ツール
+# Pro★Can
+KANBAN と GANTT によるプロジェクト管理ツール
 
 の、バックエンドサービス.
 
-docker 上でどこでも動作.
+ツールの概要は[こちら](https://github.com/iamnatsu/procan-frontend/blob/master/README.md)
+
+# tech stack
 
 Node.js + hapi + mongodb + redis
 
