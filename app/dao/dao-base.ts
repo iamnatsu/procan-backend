@@ -53,5 +53,13 @@ export class DaoBase<T> {
       throw Boom.badRequest(e.errmsg);
     });
   }
+  
+  deleteMany(filter: FilterQuery<T>): Promise<Object> {
+    return handler.db.collection(this.COLLECTION_NAME).deleteMany(filter).then(result => {
+      return result
+    }).catch(e => {
+      throw Boom.badRequest(e.errmsg);
+    });
+  }
 }
   
