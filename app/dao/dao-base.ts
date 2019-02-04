@@ -11,7 +11,7 @@ export class DaoBase<T> {
   
   get(id: String): Promise<Object> {
     return handler.db.collection(this.COLLECTION_NAME).findOne({ id: id }, { projection: { _id: 0 } }).then(result => {
-      return result
+      return result;
     }).catch(e => {
       throw Boom.badRequest(e.errmsg);
     });
@@ -29,6 +29,7 @@ export class DaoBase<T> {
     return handler.db.collection(this.COLLECTION_NAME).insertOne(payload).then(result => {
       payload['id'] = (result.ops[0]._id as ObjectId).toHexString();
       return handler.db.collection(this.COLLECTION_NAME).updateOne({'_id': result.ops[0]._id}, {$set: payload}).then(result => {
+        delete payload['_id'];
         return payload;
       }).catch(e => {
         throw Boom.badRequest(e.errmsg);
