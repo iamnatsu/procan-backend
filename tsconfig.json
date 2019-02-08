@@ -13,6 +13,7 @@
 		]
 	},
 	"include": [
-		"app/**/*.ts"
+		"app/**/*.ts",
+		"test/*.ts",
 	]
 }
