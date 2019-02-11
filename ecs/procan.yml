@@ -1,0 +1,41 @@
+version: 2
+services:
+  redis:
+    image: redis:4.0.11-stretch
+    volumes:
+      - '/opt/procan/data/redis:/data/kvs'
+    logging: { driver: syslog }
+    mem_reservation: 134217728
+
+  mongo:
+    image: mongo:3.6.8-stretch
+    volumes:
+      - '/opt/procan/data/mongo:/data/db'
+    logging: { driver: syslog }
+    mem_reservation: 134217728
+
+  ap:
+    image: nwada/procan-ap:develop
+    links:
+      - mongo:mongo
+      - redis:redis
+    ports:
+      - "3000:3000"
+    logging: { driver: syslog }
+    mem_reservation: 134217728
+    environment:
+      - smtphost=smtp.gmail.com
+      - smtpport=465
+      - smtpaccount=
+      - smtppass=
+
+  web:
+    image: nwada/procan-web:develop
+    links:
+      - ap
+    ports:
+      - "80:80"
+    environment:
+      BACK_URL: http://172.17.0.1
+    logging: { driver: syslog }
+    mem_reservation: 134217728

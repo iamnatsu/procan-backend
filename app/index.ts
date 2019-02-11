@@ -13,7 +13,8 @@ function ignoreAuth(request: Request) {
     (request.path === '/auth' && request.method === 'get') ||
     (request.path === '/auth' && request.method === 'put') ||
     (request.path === '/auth' && request.method === 'delete') ||
-    (request.path === '/regist' && request.method === 'post');
+    (request.path === '/regist' && request.method === 'post') ||
+    (request.path === '/regist' && request.method === 'put');
 }
 
 const init = async () => {

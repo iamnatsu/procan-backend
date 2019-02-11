@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "serve": "tsc && node ./build/index.js",
+    "serve": "tsc && node ./build/app/index.js",
     "debug": "tsc && node --inspect-brk ./build/index.js",
-    "docker:run": "tsc && cp -r ./node_modules ./build/ && docker-compose -f ./docker-compose/docker-compose.yml up",
+    "docker:run": "tsc && cp -r ./node_modules ./build/app/ && docker-compose -f ./docker-compose/docker-compose.yml up",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
