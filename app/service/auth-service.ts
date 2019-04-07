@@ -4,6 +4,7 @@ import { User } from '../model/user';
 import { issueToken, deleteToken, getToken } from '../middle/credential';
 import { Credential } from '../model/credential';
 import * as Boom from 'boom';
+import { LANGUAGE } from '../model/common';
 
 export class AuthService {
   static path = '/auth';
@@ -53,6 +54,7 @@ export class AuthService {
         c.userId = user.id;
         c.lastAccessedAt = (now).toISOString();
         c.expireAt = new Date((new Date().setDate(now.getDate() + 1))).toISOString();
+        c.lang = user.lang || LANGUAGE.ja_JP;
         return issueToken(JSON.stringify(c)).then(token => {
           c.id = token;
           return c;

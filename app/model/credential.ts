@@ -1,3 +1,5 @@
+import { LANGUAGE } from "./common";
+
 export class Credential {
   'lastAccessedAt': string;
   'expireAt': string;
@@ -7,4 +9,5 @@ export class Credential {
   'temporarilyChildren': Array<Credential>;
   'name': string;
   'id': string;
+  'lang': LANGUAGE
 }

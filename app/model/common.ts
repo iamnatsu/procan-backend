@@ -24,3 +24,8 @@ export enum CRUD {
     UPDATE = 'UPDATE',
     DELETE = 'DELETE'
 }
+
+export enum LANGUAGE {
+    ja_JP = 'ja_JP',
+    en_US = 'en_US',
+}
