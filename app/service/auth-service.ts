@@ -32,6 +32,7 @@ export class AuthService {
       c.userId = _c.userId;
       c.lastAccessedAt = (now).toISOString();
       c.expireAt = new Date((new Date().setDate(now.getDate() + 1))).toISOString();
+      c.lang = _c.lang;
       return issueToken(JSON.stringify(c)).then(token => {
         c.id = token;
         return c;
